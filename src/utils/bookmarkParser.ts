@@ -68,7 +68,7 @@ export function bookmarkParser(bookmarkFileContent: string): Category[] {
         //h3标签代表文件夹标题
         const h3 = child.children[0]
 
-        const subCategoryName = h3.textContent.trim() || '未命名'
+        const subCategoryName = h3.textContent?.trim() || '未命名'
         const add_date = h3.getAttribute('add_date') || ''
         const last_modified = h3.getAttribute('last_modified') || ''
         resource.newCategory(subCategoryName, add_date, last_modified)
@@ -81,7 +81,7 @@ export function bookmarkParser(bookmarkFileContent: string): Category[] {
         const a = child.children[0]
 
         const url = a.getAttribute('href') || ''
-        const name = a.textContent.trim() || url.split('/')[2] || '未命名'
+        const name = a.textContent?.trim() || url.split('/')[2] || '未命名'
         const icon = a.getAttribute('icon') || ''
         const add_date = a.getAttribute('add_date') || ''
 
