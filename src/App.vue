@@ -274,7 +274,34 @@ function handleFile(event: Event) {
             })
           })
 
-          resource.value = uploadData
+          if (resource.value.length > 0) {
+            // 增量导入：合并到现有数据
+            uploadData.forEach(newCategory => {
+              // 查找是否已存在同名分类
+              const existingCategory = resource.value.find(cat => cat.name === newCategory.name)
+
+              if (existingCategory) {
+                // 合并到现有分类
+                newCategory.site.forEach(newSite => {
+                  // 检查是否已存在相同站点（根据名称和URL判断）
+                  const siteExists = existingCategory.site.some(
+                    existingSite => existingSite.name === newSite.name && existingSite.url === newSite.url
+                  )
+
+                  if (!siteExists) {
+                    existingCategory.site.push(newSite)
+                  }
+                })
+              } else {
+                // 添加新分类
+                resource.value.push(newCategory)
+              }
+            })
+          } else {
+            // 全量导入：替换现有数据
+            resource.value = uploadData
+          }
+
           storeFile()
           console.log('文件导入成功！')
         } catch (error) {
